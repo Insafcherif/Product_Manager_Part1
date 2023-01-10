@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+const navigate = useNavigate();
 
 const Main = (propos) => {
 
@@ -16,7 +17,14 @@ const Main = (propos) => {
                 console.log(err)
             })
     }, [])
-
+const deleteFilter= (deleteID)=> {
+    axios.delete("http://localhost:8000/api/products/" + deleteID)
+                .then(res => {
+                    console.log("DELETE SUCCESS", res.data)
+                    setProducts(Products.filter((note) => note._id !== deleteID))
+                })
+                .catch(err => console.log(err))
+}
 
     return (
         <fieldset>
@@ -27,6 +35,12 @@ const Main = (propos) => {
                         <Link to={`/products/${OneProduct._id}`}>
                             <h5> {OneProduct.Title}</h5>
                         </Link>
+                        <button onClick={() => navigate(`/product/edit/${OneProduct._id}`)}>
+                            Edit
+                        </button>
+                        <button onClick={() => deleteFilter(OneProduct._id)}>
+                            Delete
+                        </button>
                     </div>
                 )
             })
